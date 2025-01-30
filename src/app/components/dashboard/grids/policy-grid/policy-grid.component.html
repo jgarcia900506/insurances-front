@@ -1,0 +1,121 @@
+<form>
+  <div class="card m-1">
+    <div class="card-header">
+      <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="input-group">
+          <div class="input-group-text" id="btnGroupAddon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+          </div>
+          <input id="searchInput" type="text" class="form-control">
+        </div>
+        <div class="btn-group me-2" role="group" aria-label="Action group">
+          <button type="button" (click)="onEdit(editContent, null)" class="btn btn-outline-secondary text-black">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7"/>
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Fecha inicio vigencia</th>
+          <th scope="col">Fecha fin de vigencia</th>
+          <th scope="col">Monto asegurado</th>
+          <th scope="col">Estatus</th>
+        </tr>
+        </thead>
+        <ng-container *ngIf="page$ | async as page" >
+          <tbody>
+          <tr *ngFor="let policy of page.data">
+            <th scope="row">{{ policy.id }}</th>
+            <td>{{ policy.type | policyTypify }}</td>
+            <td>{{ policy.effectiveStartDate | date: 'dd-MM-yyyy' }}</td>
+            <td>{{ policy.effectiveEndDate | date: 'dd-MM-yyyy' }}</td>
+            <td>{{ policy.insuredAmount | currency }}</td>
+            <td>{{ policy.status | booleanAsStatus }}</td>
+            <td>
+              <div class="btn-group me-2" role="group" aria-label="Action group">
+                <button id="edit" (click)="onEdit(editContent, policy)" class="btn btn-outline-secondary btn-light text-black" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                  </svg>
+                </button>
+                <button id="cancel" (click)="onSelect(policy)" class="btn btn-outline-secondary btn-light text-black" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard2-x" viewBox="0 0 16 16">
+                    <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z"/>
+                    <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
+                    <path d="M8 8.293 6.854 7.146a.5.5 0 1 0-.708.708L7.293 9l-1.147 1.146a.5.5 0 0 0 .708.708L8 9.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 9l1.147-1.146a.5.5 0 0 0-.708-.708z"/>
+                  </svg>
+                </button>
+                <button id="remove" (click)="onRemove(editContent, policy)" class="btn btn-outline-secondary btn-light text-black">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database-x" viewBox="0 0 16 16">
+                    <path d="M12.096 6.223A5 5 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.5 4.5 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-.813-.927Q8.378 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.6 4.6 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10q.393 0 .774-.024a4.5 4.5 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"/>
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+          <tfoot>
+          &nbsp;
+          </tfoot>
+        </ng-container>
+      </table>
+    </div>
+    <div class="card-footer text-body-secondary">
+      &nbsp;
+    </div>
+  </div>
+</form>
+<ng-template #editContent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-for-edit">
+      {{
+        editForm.controls['id'].disabled? 'Remover' : (!editForm.controls['id'].value || editForm.controls['id'].value === 0)? 'Crear' : 'Editar'
+      }}
+    </h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+  </div>
+  <form class="text-end" [formGroup]="editForm" (ngSubmit)="onSubmitChange()" >
+    <div class="modal-body">
+      <div class="mx-auto">
+        <div class="form-group text-start m-4">
+          <label for="type">Tipo</label>
+          <!--input id="type" type="range" formCotypentrolName="type" class="form-control" placeholder="Type"-->
+          <select id="type" formControlName="type" class="form-control">
+            <option *ngFor="let key of typeKeys" [value]="key">
+              {{ key | policyTypify }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group text-start m-4">
+          <label for="lastname">Fecha inicio vigencia</label>
+          <input id="lastname" type="text" formControlName="effectiveStartDate" class="form-control" placeholder="yyyy-mm-dd">
+        </div>
+        <div class="form-group text-start m-4">
+          <label for="dni">Fecha fin de vigencia</label>
+          <input id="dni" type="text" formControlName="effectiveEndDate" class="form-control" placeholder="yyyy-mm-dd">
+        </div>
+        <div class="form-group text-start m-4">
+          <label for="email">Monto asegurado</label>
+          <input id="email" type="text" formControlName="insuredAmount" class="form-control"  aria-describedby="email" placeholder="0">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" [disabled]="editForm.invalid" class="btn btn-primary">
+        Guardar
+      </button>
+    </div>
+  </form>
+</ng-template>
