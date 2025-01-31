@@ -19,7 +19,7 @@ export class PolicyService {
     if(_.isUndefined(id)) {
       return firstValueFrom(of([]));
     }
-    
+
     const mem: Array<Policy> | undefined = this._backup.get(id);
 
     return !_.isUndefined(mem)? firstValueFrom(of(mem)) : firstValueFrom(this._service.get<Array<Policy>>(`policies/user/${id}`).pipe(
@@ -41,6 +41,12 @@ export class PolicyService {
       if(change.id === 0){
         change.id = undefined;
         Object.assign(change, {status: true});
+      } else {
+        const mem = this._backup.get(change.clientId);
+        if(!_.isUndefined(mem)) {
+          const stored: Policy | undefined = _.findWhere(mem, {id: change.id});
+          Object.assign(change, {status: stored?.status});
+        }
       }
 
       this._service.post<Policy>('policies', change).subscribe((result) => {
