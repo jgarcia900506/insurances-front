@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   server: {
-    host: '127.0.0.1',
+    host: 'backend',
     port: 4200,
     path: '/api',
   },
